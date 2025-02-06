@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { RootState } from "@/store";
+
 import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSharedText } from "@/store";
 import { Osdk } from "@osdk/client";
 import { Hospital } from "@impactsense/sdk";
@@ -9,8 +11,10 @@ import client from "@/lib/client";
 
 
 const HospitalSelect = () => {
+  const sharedText = useSelector((state: RootState) => state.sharedText);
   const [selectedValue, setSelectedValue] = useState("0");
   const[hospital, setHospital] =  useState<Osdk.Instance<Hospital>>();
+  const num = Number(sharedText);
 
   const fetchHospitals = async (ind: number) => {
     const hospitals: Osdk.Instance<Hospital>[] = [];
@@ -29,6 +33,9 @@ const HospitalSelect = () => {
   return (
     <Box sx={{ padding: 2 }}>
       <Typography variant="h6">Select a hospital</Typography>
+      <div className="info">
+              <Typography variant="body1">road: {num}</Typography>
+            </div>
       <Select
         value={selectedValue}
         onChange={(e) => setSelectedValue(e.target.value)}
@@ -75,6 +82,8 @@ const HospitalSelect = () => {
             <div className="info">
               <Typography variant="body1">add: {hospital.address}</Typography>
             </div>
+
+            
           </div>
         </Box>
       )}
