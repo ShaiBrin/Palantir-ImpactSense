@@ -2,6 +2,7 @@
 import useAuthenticated from "@/lib/useAuthenticated";
 import styles from "./page.module.css";
 import RoadAccSelect from "./ui/roadAcc";
+import HospitalSelect from "./ui/hospital";
 
 function Home() {
   const authenticated = useAuthenticated();
@@ -15,7 +16,7 @@ function Home() {
         <RoadAccSelect />
       </div>
       <div className={styles.right}>
-        <RoadAccSelect />
+        <HospitalSelect />
       </div>
     </div>
   );
