@@ -13,7 +13,11 @@
     "@impactsense/sdk": "latest",
     "@osdk/client": "^2.0.12",
     "@osdk/oauth": "^1.0.0",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "langchain": "^0.3.15",
     "next": "^14.2.16",
+    "openai": "^4.83.0",
     "react": "^18",
     "react-dom": "^18"
   },
