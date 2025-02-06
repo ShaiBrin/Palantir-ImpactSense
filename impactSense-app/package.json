@@ -10,9 +10,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@impactsense/sdk": "latest",
-    "@osdk/client": "^2.0.12",
-    "@osdk/oauth": "^1.0.0",
+    "@impactsense/sdk": "^0.10.0",
+    "@osdk/client": "^2.0.13",
+    "@osdk/oauth": "^1.0.1",
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "langchain": "^0.3.15",
