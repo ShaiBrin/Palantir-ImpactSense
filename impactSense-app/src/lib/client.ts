@@ -45,3 +45,4 @@ export const getClient = () => {
   }
   return client;
 }
+export default client;
