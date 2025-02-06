@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Image from "next/image";
-import css from "./layout.module.css";
 import "./globals.css";
+import ClientProvider from "../../providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,30 +16,9 @@ function RootLayout({ children }: { children: React.ReactNode }) {
       <body className={inter.className}>
         <div id="root-container">
           <div id="root">
-            <a
-              href="https://www.palantir.com/docs/foundry/ontology-sdk/overview/"
-              target="_blank"
-            >
-              <Image
-                src="/palantir.svg"
-                alt="Palantir logo"
-                className={css.logo}
-                width={16}
-                height={16}
-                priority
-              />
-            </a>
-            <a href="https://nextjs.org/" target="_blank">
-              <Image
-                src="/next.svg"
-                alt="Next logo"
-                className={css.logo}
-                width={16}
-                height={16}
-                priority
-              />
-            </a>
+            <ClientProvider>
             {children}
+            </ClientProvider>
           </div>
         </div>
       </body>
