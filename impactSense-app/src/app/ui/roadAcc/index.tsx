@@ -7,23 +7,25 @@ import { Osdk } from "@osdk/client";
 import { RoadAccident } from "@impactsense/sdk";
 import client from "@/lib/client";
 
-
 const RoadAccSelect = () => {
   const [selectedValue, setSelectedValue] = useState("0");
-  const[roadAcc, setRoadAcc] =  useState<Osdk.Instance<RoadAccident>>();
+  const [roadAcc, setRoadAcc] = useState<Osdk.Instance<RoadAccident>>();
 
   const fetchRoadAcc = async (ind: number) => {
     const roadAccidents: Osdk.Instance<RoadAccident>[] = [];
     for await (const obj of client(RoadAccident).asyncIter()) {
       roadAccidents.push(obj);
     }
-    setRoadAcc(roadAccidents[ind])
+    setRoadAcc(roadAccidents[ind]);
   };
 
   const dispatch = useDispatch();
   const handleEnter = () => {
-    fetchRoadAcc(Number(selectedValue))
-    dispatch(setSharedText(selectedValue));
+    fetchRoadAcc(Number(selectedValue)).then(() => {
+      if (roadAcc) {
+        dispatch(setSharedText(roadAcc.$primaryKey));
+      }
+    });
   };
 
   return (
@@ -62,16 +64,15 @@ const RoadAccSelect = () => {
         <Box sx={{ marginTop: 2 }}>
           <Typography variant="h6">Road Accident:</Typography>
           <div className="road-accident">
-            
             <div className="info">
               <Typography variant="body1">Date: {roadAcc.date}</Typography>
             </div>
-
-
+            <div className="info">
+              <Typography variant="body1">primary key: {roadAcc.$primaryKey}</Typography>
+            </div>
             <div className="info">
               <Typography variant="body1">Event: {roadAcc.harmEvname}</Typography>
             </div>
-
             <div className="info">
               <Typography variant="body1">Fatalities: {roadAcc.fatals}</Typography>
             </div>
