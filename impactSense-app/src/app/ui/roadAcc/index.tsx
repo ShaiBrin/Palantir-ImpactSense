@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setSharedText } from "@/store";
 import { Osdk } from "@osdk/client";
@@ -20,7 +20,7 @@ const RoadAccSelect = () => {
   };
 
   const dispatch = useDispatch();
-  const handleEnter = () => {
+  const handleSearch = () => {
     fetchRoadAcc(Number(selectedValue)).then(() => {
       if (roadAcc) {
         dispatch(setSharedText(roadAcc.$primaryKey));
@@ -40,7 +40,7 @@ const RoadAccSelect = () => {
           PaperProps: {
             style: {
               maxHeight: 200,
-              overflowY: 'auto',
+              overflowY: "auto",
             },
           },
           anchorOrigin: {
@@ -62,31 +62,32 @@ const RoadAccSelect = () => {
 
       {roadAcc && (
         <Box sx={{ marginTop: 2 }}>
-          <Typography variant="h6">Road Accident:</Typography>
-          <div className="road-accident">
-            <div className="info">
-              <Typography variant="body1">Date: {roadAcc.date}</Typography>
-            </div>
-            <div className="info">
-              <Typography variant="body1">primary key: {roadAcc.$primaryKey}</Typography>
-            </div>
-            <div className="info">
-              <Typography variant="body1">Event: {roadAcc.harmEvname}</Typography>
-            </div>
-            <div className="info">
-              <Typography variant="body1">Fatalities: {roadAcc.fatals}</Typography>
-            </div>
-          </div>
+          <Typography variant="h6">Road Accident Details:</Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 1 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography variant="body1" sx={{ width: "120px" }}>Date:</Typography>
+              <TextField variant="outlined" fullWidth value={roadAcc.date} InputProps={{ readOnly: true }} />
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography variant="body1" sx={{ width: "120px" }}>Event:</Typography>
+              <TextField variant="outlined" fullWidth value={roadAcc.harmEvname} InputProps={{ readOnly: true }} />
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography variant="body1" sx={{ width: "120px" }}>Fatalities:</Typography>
+              <TextField variant="outlined" fullWidth value={roadAcc.fatals} InputProps={{ readOnly: true }} />
+            </Box>
+          </Box>
         </Box>
       )}
 
       <Button
-        onClick={handleEnter}
+        onClick={handleSearch}
         variant="contained"
         color="primary"
         fullWidth
+        sx={{ marginTop: 3 }}
       >
-        Enter
+        Search for Hospital
       </Button>
     </Box>
   );
