@@ -9,18 +9,15 @@ import client from "@/lib/client";
 import { ChatPromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI } from "@langchain/openai";
 
-// Haversine formula for distance calculation
 const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const toRad = (value: number) => (value * Math.PI) / 180;
   const R = 6371;
-
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  
   return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 };
 
@@ -30,6 +27,7 @@ const HospitalSelect = () => {
   const [roadAcc, setRoadAcc] = useState<Osdk.Instance<RoadAccident> | null>(null);
   const [aiResponse, setAiResponse] = useState("");
   const [loadingAi, setLoadingAi] = useState(false);
+  const [userPrompt, setUserPrompt] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -86,11 +84,7 @@ const HospitalSelect = () => {
 
     try {
       const systemMessage = SystemMessagePromptTemplate.fromTemplate(
-        `You are an emergency response AI. 
-         Your task is to determine the number of medical professionals required and if the hospital has the necessary medication. 
-         We need 2 nurses and 1 doctor for every people injured. ${roadAcc.persons}
-         You need morphine, fentanyl, ibuprofen, acetaminophen ${nearestHospital.supplieslist}
-         (${roadAcc.fatals}, ${roadAcc.persons}, ${nearestHospital.supplieslist})`
+        `${userPrompt} (${roadAcc.fatals}, ${roadAcc.persons}, ${nearestHospital.supplieslist})`
       );
 
       const chatPrompt = ChatPromptTemplate.fromMessages([systemMessage]);
@@ -125,41 +119,35 @@ const HospitalSelect = () => {
     <Box sx={{ padding: 2 }}>
       <Typography variant="h6">Nearest Hospital</Typography>
 
-      {nearestHospital ? (
+      {!nearestHospital ? (
+        <Typography variant="body2" sx={{ marginTop: 2 }}>Finding nearest hospital...</Typography>
+      ) : (
         <Box sx={{ marginTop: 2 }}>
-          {/* <Typography variant="h6">Closest Hospital</Typography> */}
-
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Typography variant="body1" sx={{ minWidth: 100 }}>Name:</Typography>
               <TextField fullWidth variant="outlined" value={nearestHospital.name} InputProps={{ readOnly: true }} />
             </Box>
-
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Typography variant="body1" sx={{ minWidth: 100 }}>Beds:</Typography>
               <TextField fullWidth variant="outlined" value={nearestHospital.beds} InputProps={{ readOnly: true }} />
             </Box>
-
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Typography variant="body1" sx={{ minWidth: 100 }}>Address:</Typography>
               <TextField fullWidth variant="outlined" value={nearestHospital.address} InputProps={{ readOnly: true }} />
             </Box>
-
-
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Typography variant="body1" sx={{ minWidth: 100 }}>Distance:</Typography>
-              <TextField 
-                fullWidth 
-                variant="outlined" 
-                value={nearestHospital ? `${getDistance(roadAcc?.latitude, roadAcc?.longitud, nearestHospital.latitude, nearestHospital.longitude).toFixed(2)} km` : "Calculating..."} 
-                InputProps={{ readOnly: true }} 
-              />
-            </Box>
           </Box>
         </Box>
-      ) : (
-        <Typography variant="body2" sx={{ marginTop: 2 }}>Finding nearest hospital...</Typography>
       )}
+
+      <TextField
+        label="Enter AI Prompt"
+        fullWidth
+        variant="outlined"
+        sx={{ marginTop: 2 }}
+        value={userPrompt}
+        onChange={(e) => setUserPrompt(e.target.value)}
+      />
 
       <Button
         onClick={handleGenerateAiResponse}
