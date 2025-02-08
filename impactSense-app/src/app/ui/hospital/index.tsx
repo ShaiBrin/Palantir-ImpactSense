@@ -136,6 +136,16 @@ const HospitalSelect = () => {
               <Typography variant="body1" sx={{ minWidth: 100 }}>Address:</Typography>
               <TextField fullWidth variant="outlined" value={nearestHospital.address} InputProps={{ readOnly: true }} />
             </Box>
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography variant="body1" sx={{ minWidth: 100 }}>Distance:</Typography>
+              <TextField 
+                fullWidth 
+                variant="outlined" 
+                value={nearestHospital ? `${getDistance(roadAcc?.latitude, roadAcc?.longitud, nearestHospital.latitude, nearestHospital.longitude).toFixed(2)} km` : "Calculating..."} 
+                InputProps={{ readOnly: true }} 
+              />
+            </Box>
           </Box>
         </Box>
       )}
